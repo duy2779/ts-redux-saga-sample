@@ -1,57 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
+import { createTheme, Theme, ThemeProvider } from '@mui/material/styles';
+import { NotFound, PrivateRoute } from 'components/Common';
+import { AdminLayout } from 'components/Layout';
+import LoginPage from 'features/auth/pages/LoginPage';
+import Dashboard from 'features/dashboard';
+import Student from 'features/student';
+import AddEditPage from 'features/student/pages/AddEditPage';
+import ListPage from 'features/student/pages/ListPage';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 
+declare module '@mui/styles/defaultTheme' {
+  interface DefaultTheme extends Theme {}
+}
+
 function App() {
+  const theme = createTheme();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Routes>
+        <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/admin"
+          element={
+            <PrivateRoute>
+              <AdminLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="students" element={<Student />}>
+            <Route index element={<ListPage />} />
+            <Route path="add" element={<AddEditPage />} />
+            <Route path=":studentId" element={<AddEditPage />} />
+          </Route>
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </ThemeProvider>
   );
 }
 

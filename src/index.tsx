@@ -1,21 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { store } from './app/store';
 import { Provider } from 'react-redux';
-import * as serviceWorker from './serviceWorker';
+import { CssBaseline } from '@mui/material';
+import { CustomRouter } from 'components/Common';
+import customHistory from 'utils/history';
+const root = createRoot(document.getElementById('root') as HTMLElement);
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
+root.render(
+  <Provider store={store}>
+    <CustomRouter history={customHistory}>
+      <CssBaseline />
       <App />
-    </Provider>
-  </React.StrictMode>,
-  document.getElementById('root')
+    </CustomRouter>
+  </Provider>
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
